@@ -1,25 +1,21 @@
-import users_pb2_grpc as users_service
-import users_types_pb2 as users_messages
-from client_wrapper import ServiceClient
+import os
+
+from graft_pypi_users_service import GraftConfig
+from graft_pypi_users_service.graft.users_graft import Users
 
 
 def run():
-    users = ServiceClient(users_service, 'UsersStub', 'localhost', 50051)
-    # Insert example metadata
-    metadata = [('ip', '127.0.0.1')]
-    response = users.CreateUser(
-        users_messages.CreateUserRequest(username='tom'),
-        metadata=metadata
-    )
+    GraftConfig.host = os.environ.get('USERS_HOST', 'ws://localhost:50051/ws')
+    users = Users
+    # Insert example metadata (sent as Graftcode headers)
+    GraftConfig.set_headers({'ip': '127.0.0.1'})
+    response = users.create_user('tom', '', '')
     if response:
-        print("User created:", response.user.username)
-    request = users_messages.GetUsersRequest(
-        user=[users_messages.User(username="alexa", user_id=1),
-              users_messages.User(username="christie", user_id=1)]
-    )
-    response = users.GetUsers(request)
+        print("User created:", response.username)
+    request = (["alexa", "christie"], [1, 1])
+    response = users.get_users(*request)
     for resp in response:
-        print(resp)
+        print("user {", "username:", resp.username, "user_id:", resp.user_id, "}")
 
 
 if __name__ == '__main__':

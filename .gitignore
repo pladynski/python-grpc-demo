@@ -104,3 +104,6 @@ ENV/
 gen-*
 
 # End of https://www.gitignore.io/api/python
+
+# Graftcode Gateway runtime cache
+.graftcode/

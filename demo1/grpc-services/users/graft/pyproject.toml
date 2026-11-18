@@ -1,0 +1,6 @@
+[project]
+name = "users-service"
+version = "1.0.0"
+description = "Users service exposed with Graftcode (wraps the gRPC UsersService logic)"
+requires-python = ">=3.9"
+dependencies = ["grpcio", "protobuf", "graftcode-context"]
